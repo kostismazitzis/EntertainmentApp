@@ -2,14 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.*;
+import java.io.Console;
 
 public class JavaEntertainmentApp {
     private static List<Show> shows = new ArrayList<>();
-    private static List<User> users = new ArrayList<>();
+    private static List<User> userList = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
-    private static User loginUser;
     private static User User;
-    private static User[] userList;
     User user = new User("John Doe", "john@example.com", "password");
 
     public static void main(String[] args) {
@@ -57,13 +56,16 @@ public class JavaEntertainmentApp {
         System.out.print("Year of 1st screening: ");
         int year = scanner.nextInt();
         scanner.nextLine();
-        System.out.print("Type: ");
-        String type = scanner.nextLine();
+        /*System.out.print("Type: ");
+        String typeString = scanner.nextLine();*/
         System.out.print("Country of production: ");
         String country = scanner.nextLine();
         System.out.print("Director's name: ");
-        String director = scanner.nextLine();
-
+        String directorName = scanner.nextLine(); // Get director's name
+    
+        // Create a new Director object with the provided director's name
+        Director showDirector = new Director(directorName, null, "", "");
+    
         List<Genre> genres = new ArrayList<>();
         genres.add(Genre.DRAMA);
         genres.add(Genre.THRILLER);
@@ -71,13 +73,12 @@ public class JavaEntertainmentApp {
         genres.add(Genre.HORROR);
         genres.add(Genre.CRIME);
         genres.add(Genre.ROMANCE);
-        Director showDirector = new Director("Director Name"); // Replace "Director Name" with the actual director name
-        Show show = new Show("Show Title", 2023, genres, "Country", director);
-
-
+    
+        Show show = new Show(title, year, genres, country, showDirector);
+    
         System.out.print("Is it a series or miniseries? (S/M): ");
         String seriesOption = scanner.nextLine();
-
+    
         if (seriesOption.equalsIgnoreCase("S")) {
             System.out.print("Number of seasons: ");
             int seasons = scanner.nextInt();
@@ -88,28 +89,29 @@ public class JavaEntertainmentApp {
             System.out.print("Year last aired: ");
             int lastAiredYear = scanner.nextInt();
             scanner.nextLine();
-
+    
             show.setSeriesDetails(seasons, episodesPerSeason, lastAiredYear);
         }
-
+    
         System.out.println();
         System.out.println("Enter actor details (Enter 'done' to finish):");
-
+    
         String actor;
         do {
             System.out.print("Actor's full name: ");
             actor = scanner.nextLine();
-
+    
             if (!actor.equalsIgnoreCase("done")) {
                 show.addActor(actor);
             }
-        }while (!actor.equalsIgnoreCase("done")) ;
-
-            shows.add(show);
-            System.out.println();
-            System.out.println("Show added successfully!");
-            show.displayShowInfo();
-        }
+        } while (!actor.equalsIgnoreCase("done"));
+    
+        shows.add(show);
+        System.out.println();
+        System.out.println("Show added successfully!");
+        show.displayShowInfo();
+    }
+    
     public static void showRenewal() {
         System.out.println("Enter the show ID or title to renew:");
         String searchInput = scanner.nextLine();
@@ -118,11 +120,24 @@ public class JavaEntertainmentApp {
         boolean found = false;
 
         // Search for the show by ID or title
-        for (Show show : shows) {
-            if (show.getShowId() == Integer.parseInt(searchInput) || show.getTitle().equalsIgnoreCase(searchInput)) {
-                selectedShow = show;
-                found = true;
-                break;
+        if (searchInput.matches("\\d+")) {
+            int showId = Integer.parseInt(searchInput);
+            // Search for the show by ID
+            for (Show show : shows) {
+                if (show.getShowId() == showId) {
+                    selectedShow = show;
+                    found = true;
+                    break;
+                }
+            }
+        } else { // Otherwise, treat it as a show title
+            // Search for the show by title
+            for (Show show : shows) {
+                if (show.getTitle().equalsIgnoreCase(searchInput)) {
+                    selectedShow = show;
+                    found = true;
+                    break;
+                }
             }
         }
 
@@ -185,40 +200,17 @@ public class JavaEntertainmentApp {
         String evaluateChoice = scanner.nextLine();
 
         if (evaluateChoice.equalsIgnoreCase("Y")) {
+            //user = signIn();
             if (user != null) {
-                System.out.print("Enter the show ID to evaluate: ");
-                int showId = scanner.nextInt();
-                scanner.nextLine();
-
-                System.out.print("Enter your rating (1-10): ");
-                int rating = scanner.nextInt();
-                scanner.nextLine();
-
-                user.rateShow(showId, rating);
-                System.out.println("Show rated successfully.");
+                rateShow(user);
             } else {
-                System.out.println("You need to be logged in to evaluate a show.");
+                //System.out.println("You need to be logged in to evaluate a show.");
                 System.out.print("Do you want to sign in? (Y/N): ");
                 String signInChoice = scanner.nextLine();
-
                 if (signInChoice.equalsIgnoreCase("Y")) {
                     user = signIn();
                     if (user != null) {
-                        System.out.print("Enter the show ID to evaluate: ");
-                        int showId = scanner.nextInt();
-                        scanner.nextLine();
-
-                        System.out.print("Enter your rating (1-10): ");
-                        int rating = scanner.nextInt();
-                        scanner.nextLine();
-
-                        Show show = findShowById(showId);
-                        if (show != null) {
-                            user.evaluateShow(show, rating);
-                            System.out.println("Show rated successfully.");
-                        } else {
-                            System.out.println("Show not found.");
-                        }
+                        rateShow(user);
                     } else {
                         System.out.println("Invalid credentials. Sign in failed.");
                     }
@@ -226,22 +218,48 @@ public class JavaEntertainmentApp {
             }
         }
     }
+    private static void rateShow(User user) {
+        System.out.print("Enter the show ID to evaluate: ");
+        int showId = scanner.nextInt();
+        scanner.nextLine();
+    
+        System.out.print("Enter your rating (1-10): ");
+        int rating = scanner.nextInt();
+        scanner.nextLine();
+    
+        Show show = findShowById(showId);
+        if (show != null) {
+            user.evaluateShow(show, rating);
+            System.out.println("Show rated successfully.");
+        } else {
+            System.out.println("Show not found.");
+        }
+    }
+
 
     private static User signIn() {
+        Console console = System.console();
+        if (console == null) {
+            System.out.println("Console not available. Please run the program in a terminal.");
+            return null;
+        }
+    
         System.out.print("Enter your email: ");
         String email = scanner.nextLine();
-
-        System.out.print("Enter your password: ");
-        String password = scanner.nextLine();
-
+    
+        // Read password securely
+        char[] passwordChars = console.readPassword("Enter your password: ");
+        String password = new String(passwordChars);
+    
         for (User user : userList) {
-            if (user.getemail().equals(email) && user.getpassword().equals(password)) {
+            if (user.getemail().equals(email) && user.getPassword().equals(password)) {
                 return user; // Return the matched user
             }
         }
-
         return null;
     }
+    
+    
 
 
     public static void searchByTitle() {
@@ -301,7 +319,6 @@ public class JavaEntertainmentApp {
         }
     }
     public static void viewUserRatings(User user) {
-        boolean loggedInUser;
         if (user != null) {
             System.out.println("User Ratings:");
             for (Map.Entry<Integer, Integer> entry : user.getShowRatings().entrySet()) {
@@ -328,6 +345,7 @@ public class JavaEntertainmentApp {
         }
         return null;
     }
+
 
 
 }
