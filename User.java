@@ -64,6 +64,9 @@ public class User {
     public String password() {
         return password;
     }
+    public String getPassword() {
+        return password;
+    }
 
     public void setPassword(String password) {
         this.password = password;
@@ -120,5 +123,17 @@ public class User {
     public Object getemail() {
         return email;
     }
+    // Method to display user information with hidden password
+    public void displayUserInfo() {
+        System.out.println("Name: " + name);
+        System.out.println("Email: " + email);
+        System.out.println("Password: " + hidePassword());
+    }
+
+    // Method to hide password with asterisks
+    private String hidePassword() {
+        return "*".repeat(password.length());
+    }
+    
 }
 
