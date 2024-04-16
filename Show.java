@@ -8,37 +8,38 @@ class Show {
     private String title;
     private int year;
     private String type;
-    private String country;
     private Director director;
     private List<String> actors;
-    private List<Actor> actor;
     private int seasons;
     private int episodesPerSeason;
     private int lastAiredYear;
     private List<Genre> genres;
     private String AverageRating;
     private int id;
-    private int yearOfFirstScreening;
     private List<Rating> ratings;
-    private String countryOfProduction;
-
 
 
     public Show(String title, int year, List<Genre> genres, String country, Director director, List<Actor> actors) {
         this.showId = ++showCount;
         this.title = title;
         this.year = year;
-        this.country = country;
         this.director = director;
-        this.actors = new ArrayList<String>();
+        this.actors = new ArrayList<>();
         for (int i = 0; i < Math.min(actors.size(), 10); i++) {
-            this.actors.add(String.valueOf(actors.get(i)));
+            this.actors.add(actors.get(i).getName());
         }
         this.genres = genres;
     }
 
-    public Show(String show_title, int year, List<Genre> genres, String country, String director) {
+    public Show(String title, int year, List<Genre> genres, String country, Director director) {
+        this.showId = ++showCount;
+        this.title = title;
+        this.year = year;
+        this.director = director;
+        this.actors = new ArrayList<>();
+        this.genres = genres;
     }
+
 
 
 
