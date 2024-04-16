@@ -1,10 +1,12 @@
+import java.time.LocalDate;
+
 public class Director {
     private String name;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String countryOfBirth;
     private String website;
 
-    public Director(String name) {
+    public Director(String name, LocalDate dateOfBirth, String countryOfBirth, String website) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.countryOfBirth = countryOfBirth;
@@ -19,11 +21,11 @@ public class Director {
         this.name = name;
     }
 
-    public String dateOfBirth() {
+    public LocalDate dateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
