@@ -1,0 +1,3 @@
+public enum Genre {
+    DRAMA, COMEDY, THRILLER, ROMANCE, HORROR, CRIME
+}
