@@ -2,15 +2,13 @@ import java.util.Date;
 
 public class Actor {
         private int actorId;
-        private String firstName;
-        private String lastName;
+        private String Name;
         private Date dateOfBirth;
         private String countryOfBirth;
         private String website;
 
-        public Actor(String firstName, String lastName, Date dateOfBirth, String countryOfBirth, String website) {
-            this.firstName = firstName;
-            this.lastName = lastName;
+        public Actor(String Name, Date dateOfBirth, String countryOfBirth, String website) {
+            this.Name = Name;
             this.dateOfBirth = dateOfBirth;
             this.countryOfBirth = countryOfBirth;
             this.website = website;
@@ -26,20 +24,12 @@ public class Actor {
             this.actorId = actorId;
         }
 
-        public String getFirstName() {
-            return firstName;
+        public String getName() {
+            return Name;
         }
 
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
+        public void setName(String Name) {
+            this.Name = Name;
         }
 
         public Date getDateOfBirth() {
@@ -66,5 +56,3 @@ public class Actor {
             this.website = website;
         }
     }
-
-
